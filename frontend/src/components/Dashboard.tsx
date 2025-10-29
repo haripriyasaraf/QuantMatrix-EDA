@@ -28,6 +28,8 @@ import {
   ArcElement,
   PointElement,
   LineElement,
+  Tooltip as ChartTooltip,
+  Filler,
 } from 'chart.js';
 import { Bar, Line, Doughnut } from 'react-chartjs-2';
 
@@ -46,7 +48,9 @@ ChartJS.register(
   Legend,
   ArcElement,
   PointElement,
-  LineElement
+  LineElement,
+  ChartTooltip,
+  Filler
 );
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FFC658', '#FF7C7C'];
