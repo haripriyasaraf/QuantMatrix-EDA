@@ -539,22 +539,6 @@ const Dashboard: React.FC = () => {
                   <Fullscreen fontSize="small" />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Full Screen">
-                <IconButton 
-                  size="small"
-                  onClick={() => handleFullScreen('yearly-sales-value')}
-                  sx={{ 
-                    backgroundColor: darkMode ? 'rgba(45, 45, 45, 0.9)' : 'rgba(255,255,255,0.9)',
-                    color: darkMode ? '#f39c12' : 'inherit',
-                    '&:hover': { 
-                      backgroundColor: darkMode ? 'rgba(45, 45, 45, 1)' : 'rgba(255,255,255,1)',
-                      color: darkMode ? '#e67e22' : 'inherit'
-                    }
-                  }}
-                >
-                  <Fullscreen fontSize="small" />
-                </IconButton>
-              </Tooltip>
             </Box>
             {/* Metric Toggle (placed in header row) */}
             
@@ -815,22 +799,6 @@ const Dashboard: React.FC = () => {
                   <TableChart fontSize="small" />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Full Screen">
-                <IconButton 
-                  size="small"
-                  onClick={() => handleFullScreen('monthly-trend')}
-                  sx={{ 
-                    backgroundColor: darkMode ? 'rgba(45, 45, 45, 0.9)' : 'rgba(255,255,255,0.9)',
-                    color: darkMode ? '#f39c12' : 'inherit',
-                    '&:hover': { 
-                      backgroundColor: darkMode ? 'rgba(45, 45, 45, 1)' : 'rgba(255,255,255,1)',
-                      color: darkMode ? '#e67e22' : 'inherit'
-                    }
-                  }}
-                >
-                  <Fullscreen fontSize="small" />
-                </IconButton>
-              </Tooltip>
             </Box>
               {chartData.yearlySalesValue ? (
               <Box id="yearly-sales-value-chart">
@@ -997,22 +965,6 @@ const Dashboard: React.FC = () => {
                   }}
                 >
                   <TableChart fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Full Screen">
-                <IconButton 
-                  size="small"
-                  onClick={() => handleFullScreen('market-share')}
-                  sx={{ 
-                    backgroundColor: darkMode ? 'rgba(45, 45, 45, 0.9)' : 'rgba(255,255,255,0.9)',
-                    color: darkMode ? '#f39c12' : 'inherit',
-                    '&:hover': { 
-                      backgroundColor: darkMode ? 'rgba(45, 45, 45, 1)' : 'rgba(255,255,255,1)',
-                      color: darkMode ? '#e67e22' : 'inherit'
-                    }
-                  }}
-                >
-                  <Fullscreen fontSize="small" />
                 </IconButton>
               </Tooltip>
             </Box>
@@ -1518,141 +1470,6 @@ const Dashboard: React.FC = () => {
                     }}
                   />
                 )}
-              </Box>
-            )}
-            {fullScreenChart === 'yearly-sales-value' && chartData.yearlySalesValue && (
-              <Box sx={{ width: '90%', height: '90%' }}>
-                <Bar
-                  data={{
-                    labels: chartData.yearlySalesValue.labels,
-                    datasets: [
-                      {
-                        label: 'Brand 1',
-                        data: chartData.yearlySalesValue.data,
-                        backgroundColor: '#A8DADC',
-                        borderColor: '#457B9D',
-                        borderWidth: 2,
-                        borderSkipped: false,
-                      },
-                      {
-                        label: 'Brand 2',
-                        data: chartData.yearlySalesValue.data?.map((val: number) => val * 0.8) || [],
-                        backgroundColor: '#F1A7A7',
-                        borderColor: '#E63946',
-                        borderWidth: 2,
-                        borderSkipped: false,
-                      },
-                      {
-                        label: 'Brand 3',
-                        data: chartData.yearlySalesValue.data?.map((val: number) => val * 0.6) || [],
-                        backgroundColor: '#FFD166',
-                        borderColor: '#F77F00',
-                        borderWidth: 2,
-                        borderSkipped: false,
-                      },
-                      {
-                        label: 'Brand 4',
-                        data: chartData.yearlySalesValue.data?.map((val: number) => val * 0.4) || [],
-                        backgroundColor: '#E8F4F8',
-                        borderColor: '#A8DADC',
-                        borderWidth: 2,
-                        borderSkipped: false,
-                      },
-                      {
-                        label: 'Brand 5',
-                        data: chartData.yearlySalesValue.data?.map((val: number) => val * 0.3) || [],
-                        backgroundColor: '#F8E8E8',
-                        borderColor: '#F1A7A7',
-                        borderWidth: 2,
-                        borderSkipped: false,
-                      },
-                      {
-                        label: 'Brand 6',
-                        data: chartData.yearlySalesValue.data?.map((val: number) => val * 0.2) || [],
-                        backgroundColor: '#FFF4E6',
-                        borderColor: '#FFD166',
-                        borderWidth: 2,
-                        borderSkipped: false,
-                      },
-                    ],
-                  }}
-                  options={{
-                    ...getChartOptions('Year-wise Sales Value - Brand Wise (Full Screen)', 'yearly-sales-value'),
-                    scales: {
-                      x: { stacked: true },
-                      y: { stacked: true, beginAtZero: true },
-                    },
-                    plugins: {
-                      ...getChartOptions('Year-wise Sales Value - Brand Wise (Full Screen)', 'yearly-sales-value').plugins,
-                      legend: {
-                        ...getChartOptions('Year-wise Sales Value - Brand Wise (Full Screen)', 'yearly-sales-value').plugins?.legend,
-                        labels: {
-                          usePointStyle: true,
-                          padding: 20,
-                          font: { size: 14, weight: 'bold' },
-                        },
-                      },
-                    },
-                  }}
-                />
-              </Box>
-            )}
-            {fullScreenChart === 'monthly-trend' && chartData.monthlyTrend && (
-              <Box sx={{ width: '90%', height: '90%' }}>
-                <Line
-                  data={{
-                    labels: chartData.monthlyTrend.labels,
-                    datasets: [
-                      {
-                        label: 'Monthly Sales',
-                        data: chartData.monthlyTrend.data,
-                        borderColor: '#2E86AB',
-                        backgroundColor: 'rgba(46, 134, 171, 0.1)',
-                        borderWidth: 4,
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: '#2E86AB',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                      },
-                    ],
-                  }}
-                  options={{
-                    ...getChartOptions('Monthly Sales Trend (Full Screen)', 'monthly-trend'),
-                    plugins: {
-                      ...getChartOptions('Monthly Sales Trend (Full Screen)', 'monthly-trend').plugins,
-                      legend: {
-                        ...getChartOptions('Monthly Sales Trend (Full Screen)', 'monthly-trend').plugins?.legend,
-                        labels: {
-                          usePointStyle: true,
-                          padding: 20,
-                          font: { size: 14, weight: 'bold' },
-                        },
-                      },
-                    },
-                  }}
-                />
-              </Box>
-            )}
-            {fullScreenChart === 'market-share' && chartData.marketShare && (
-              <Box sx={{ width: '90%', height: '90%' }}>
-                <Doughnut
-                  data={{
-                    labels: chartData.marketShare.labels,
-                    datasets: [
-                      {
-                        data: chartData.marketShare.data,
-                        backgroundColor: ['#A8DADC','#F1A7A7','#FFD166','#E8F4F8','#F8E8E8','#FFF4E6'],
-                        borderColor: ['#457B9D','#E63946','#F77F00','#A8DADC','#F1A7A7','#FFD166'],
-                        borderWidth: 3,
-                        hoverBorderWidth: 4,
-                      },
-                    ],
-                  }}
-                  options={getDoughnutOptions('Market Share (Full Screen)')}
-                />
               </Box>
             )}
           </Box>
