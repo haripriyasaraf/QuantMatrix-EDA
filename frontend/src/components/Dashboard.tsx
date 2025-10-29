@@ -192,6 +192,35 @@ const Dashboard: React.FC = () => {
           weight: 'bold' as const,
         },
       },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          title: function(items: any[]) {
+            return items && items.length > 0 ? String(items[0].label ?? '') : '';
+          },
+          label: function(context: any) {
+            const datasetLabel = context.dataset?.label ? String(context.dataset.label) + ': ' : '';
+            const parsed = (context.parsed && typeof context.parsed === 'object')
+              ? (typeof context.parsed.x === 'number' ? context.parsed.x : context.parsed.y)
+              : context.parsed;
+            const value = typeof parsed === 'number' ? parsed : 0;
+            return `${datasetLabel}${value.toLocaleString()}`;
+          },
+          footer: function(items: any[]) {
+            if (!items || items.length === 0) return '';
+            const dataIndex = items[0].dataIndex;
+            const chart: any = items[0].chart;
+            const datasets: any[] = chart?.data?.datasets || [];
+            if (datasets.length <= 1) return '';
+            const total = datasets.reduce((sum: number, ds: any) => {
+              const v = Array.isArray(ds.data) ? ds.data[dataIndex] : 0;
+              const n = typeof v === 'number' ? v : (typeof v === 'string' ? Number(v) : 0);
+              return sum + (isNaN(n) ? 0 : n);
+            }, 0);
+            return `Total: ${total.toLocaleString()}`;
+          }
+        }
+      }
     },
     scales: {
       y: {
@@ -232,8 +261,13 @@ const Dashboard: React.FC = () => {
             const label = context.label || '';
             const value = context.parsed || 0;
             const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
-            const percentage = ((value / total) * 100).toFixed(1);
-            return `${label}: ${value} (${percentage}%)`;
+            const percentage = total ? ((value / total) * 100).toFixed(1) : '0.0';
+            return `${label}: ${Number(value).toLocaleString()} (${percentage}%)`;
+          },
+          footer: function(contexts: any[]) {
+            if (!contexts || contexts.length === 0) return '';
+            const total = contexts[0].dataset.data.reduce((a: number, b: number) => a + b, 0);
+            return `Total: ${Number(total).toLocaleString()}`;
           }
         }
       }
