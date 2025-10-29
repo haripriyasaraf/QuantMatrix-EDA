@@ -15,6 +15,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import { Tooltip } from '@mui/material';
 import { DarkMode, LightMode, Download, PictureAsPdf, TableChart, FileDownload, BarChart, ShowChart, PieChart, Timeline, Fullscreen, FullscreenExit } from '@mui/icons-material';
@@ -538,40 +540,27 @@ const Dashboard: React.FC = () => {
                 </IconButton>
               </Tooltip>
             </Box>
-            {/* Metric Toggle */}
-            <Box sx={{ position: 'absolute', top: 16, left: 16, display: 'flex', gap: 1, zIndex: 1 }}>
-              <Tooltip title="Show Market Share by Sales">
-                <IconButton 
-                  size="small"
-                  onClick={() => { setMarketShareMetric('sales'); loadMarketShareOnly('sales'); }}
-                  sx={{ 
-                    backgroundColor: marketShareMetric === 'sales' ? '#f39c12' : (darkMode ? 'rgba(45, 45, 45, 0.9)' : 'rgba(255,255,255,0.9)'),
-                    color: marketShareMetric === 'sales' ? 'white' : (darkMode ? '#f39c12' : 'inherit'),
-                    '&:hover': { 
-                      backgroundColor: marketShareMetric === 'sales' ? '#e67e22' : (darkMode ? 'rgba(45, 45, 45, 1)' : 'rgba(255,255,255,1)'),
-                      color: marketShareMetric === 'sales' ? 'white' : (darkMode ? '#e67e22' : 'inherit')
-                    }
-                  }}
-                >
-                  <PieChart fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Show Market Share by Volume">
-                <IconButton 
-                  size="small"
-                  onClick={() => { setMarketShareMetric('volume'); loadMarketShareOnly('volume'); }}
-                  sx={{ 
-                    backgroundColor: marketShareMetric === 'volume' ? '#f39c12' : (darkMode ? 'rgba(45, 45, 45, 0.9)' : 'rgba(255,255,255,0.9)'),
-                    color: marketShareMetric === 'volume' ? 'white' : (darkMode ? '#f39c12' : 'inherit'),
-                    '&:hover': { 
-                      backgroundColor: marketShareMetric === 'volume' ? '#e67e22' : (darkMode ? 'rgba(45, 45, 45, 1)' : 'rgba(255,255,255,1)'),
-                      color: marketShareMetric === 'volume' ? 'white' : (darkMode ? '#e67e22' : 'inherit')
-                    }
-                  }}
-                >
-                  <Timeline fontSize="small" />
-                </IconButton>
-              </Tooltip>
+            {/* Metric Toggle (clearly labeled) */}
+            <Box sx={{ position: 'absolute', top: 16, left: 16, zIndex: 1 }}>
+              <ToggleButtonGroup
+                size="small"
+                color="primary"
+                exclusive
+                value={marketShareMetric}
+                onChange={(_, val) => { if (val) { setMarketShareMetric(val); loadMarketShareOnly(val); } }}
+                sx={{
+                  backgroundColor: darkMode ? 'rgba(45, 45, 45, 0.9)' : 'rgba(255,255,255,0.95)',
+                  '& .MuiToggleButton-root': {
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    px: 1.5,
+                  }
+                }}
+                aria-label="Market Share metric"
+              >
+                <ToggleButton value="sales" aria-label="Sales">Sales</ToggleButton>
+                <ToggleButton value="volume" aria-label="Volume">Volume</ToggleButton>
+              </ToggleButtonGroup>
             </Box>
               {chartData.salesByYearVolume ? (
               <Box id="sales-by-year-volume-chart">
