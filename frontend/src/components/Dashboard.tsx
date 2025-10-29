@@ -541,30 +541,7 @@ const Dashboard: React.FC = () => {
               </Tooltip>
             </Box>
             {/* Metric Toggle (placed in header row) */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: 'text.secondary' }}>
-                Metric
-              </Typography>
-              <ToggleButtonGroup
-                size="small"
-                color="primary"
-                exclusive
-                value={marketShareMetric}
-                onChange={(_, val) => { if (val) { setMarketShareMetric(val); loadMarketShareOnly(val); } }}
-                sx={{
-                  backgroundColor: darkMode ? 'rgba(45, 45, 45, 0.9)' : 'rgba(255,255,255,0.95)',
-                  '& .MuiToggleButton-root': {
-                    textTransform: 'none',
-                    fontWeight: 'bold',
-                    px: 1.5,
-                  }
-                }}
-                aria-label="Market Share metric"
-              >
-                <ToggleButton value="sales" aria-label="Sales">Sales</ToggleButton>
-                <ToggleButton value="volume" aria-label="Volume">Volume</ToggleButton>
-              </ToggleButtonGroup>
-            </Box>
+            
               {chartData.salesByYearVolume ? (
               <Box id="sales-by-year-volume-chart">
                 {chartTypes.salesByYearVolume === 'bar' ? (
@@ -1113,6 +1090,28 @@ const Dashboard: React.FC = () => {
                   <TableChart fontSize="small" />
                 </IconButton>
               </Tooltip>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+      
+              <ToggleButtonGroup
+                size="small"
+                color="primary"
+                exclusive
+                value={marketShareMetric}
+                onChange={(_, val) => { if (val) { setMarketShareMetric(val); loadMarketShareOnly(val); } }}
+                sx={{
+                  backgroundColor: darkMode ? 'rgba(45, 45, 45, 0.9)' : 'rgba(255,255,255,0.95)',
+                  '& .MuiToggleButton-root': {
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    px: 1.5,
+                  }
+                }}
+                aria-label="Market Share metric"
+              >
+                <ToggleButton value="sales" aria-label="Sales">Sales</ToggleButton>
+                <ToggleButton value="volume" aria-label="Volume">Volume</ToggleButton>
+              </ToggleButtonGroup>
             </Box>
             {(chartData.marketShare || true) ? (() => {
               // Define brand-to-color mapping
