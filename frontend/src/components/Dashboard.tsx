@@ -462,183 +462,89 @@ const Dashboard: React.FC = () => {
             </Box>
               {chartData.salesByYearVolume ? (
               <Box id="sales-by-year-volume-chart">
-                {chartTypes.salesByYearVolume === 'bar' ? (
-                <Bar
-                  data={{
-                    labels: chartData.salesByYearVolume.labels,
-                    datasets: [
+                {(() => {
+                  const selectedBrand = (filters.brands && filters.brands.length === 1) ? filters.brands[0] : null;
+                  if (chartTypes.salesByYearVolume === 'bar') {
+                    const datasets = selectedBrand ? [
                       {
-                      label: 'Brand 1',
+                        label: selectedBrand,
                         data: chartData.salesByYearVolume.sales_data || [],
-                      backgroundColor: '#A8DADC',
-                      borderColor: '#457B9D',
+                        backgroundColor: '#A8DADC',
+                        borderColor: '#457B9D',
                         borderWidth: 1,
-                      borderRadius: 4,
-                      borderSkipped: false,
+                        borderRadius: 4,
+                        borderSkipped: false,
+                      },
+                    ] : [
+                      {
+                        label: 'Sales Value',
+                        data: chartData.salesByYearVolume.sales_data || [],
+                        backgroundColor: '#A8DADC',
+                        borderColor: '#457B9D',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        borderSkipped: false,
                       },
                       {
-                      label: 'Brand 2',
+                        label: 'Volume',
                         data: chartData.salesByYearVolume.volume_data || [],
-                      backgroundColor: '#F1A7A7',
-                      borderColor: '#E63946',
-                      borderWidth: 1,
-                      borderRadius: 4,
-                      borderSkipped: false,
-                    },
-                    {
-                      label: 'Brand 3',
-                      data: chartData.salesByYearVolume.sales_data?.map(val => val * 0.7) || [],
-                      backgroundColor: '#FFD166',
-                      borderColor: '#F77F00',
-                      borderWidth: 1,
-                      borderRadius: 4,
-                      borderSkipped: false,
-                    },
-                    {
-                      label: 'Brand 4',
-                      data: chartData.salesByYearVolume.volume_data?.map(val => val * 0.6) || [],
-                      backgroundColor: '#E8F4F8',
-                      borderColor: '#A8DADC',
-                      borderWidth: 1,
-                      borderRadius: 4,
-                      borderSkipped: false,
-                    },
-                    {
-                      label: 'Brand 5',
-                      data: chartData.salesByYearVolume.sales_data?.map(val => val * 0.5) || [],
-                      backgroundColor: '#F8E8E8',
-                      borderColor: '#F1A7A7',
-                      borderWidth: 1,
-                      borderRadius: 4,
-                      borderSkipped: false,
-                    },
-                    {
-                      label: 'Brand 6',
-                      data: chartData.salesByYearVolume.volume_data?.map(val => val * 0.4) || [],
-                      backgroundColor: '#FFF4E6',
-                      borderColor: '#FFD166',
+                        backgroundColor: '#F1A7A7',
+                        borderColor: '#E63946',
                         borderWidth: 1,
-                      borderRadius: 4,
-                      borderSkipped: false,
+                        borderRadius: 4,
+                        borderSkipped: false,
                       },
-                    ],
-                  }}
-                  options={{
-                  ...getChartOptions('Sales Value by Year - Brand Wise', 'sales-by-year-volume'),
-                    indexAxis: 'y' as const,
-                  scales: {
-                    x: {
-                      stacked: true,
-                      beginAtZero: true,
-                    },
-                    y: {
-                      stacked: true,
-                    },
-                  },
-                  plugins: {
-                    ...getChartOptions('Sales Value by Year - Brand Wise', 'sales-by-year-volume').plugins,
-                    legend: {
-                      ...getChartOptions('Sales Value by Year - Brand Wise', 'sales-by-year-volume').plugins?.legend,
-                      labels: {
-                        usePointStyle: true,
-                        padding: 15,
-                        font: {
-                          size: 11,
-                          weight: 'bold'
-                        }
-                      }
-                    }
+                    ];
+                    return (
+                      <Bar
+                        data={{
+                          labels: chartData.salesByYearVolume.labels,
+                          datasets,
+                        }}
+                        options={{
+                          ...getChartOptions('Sales Value by Year', 'sales-by-year-volume'),
+                          indexAxis: 'y' as const,
+                          scales: {
+                            x: {
+                              stacked: !selectedBrand,
+                              beginAtZero: true,
+                            },
+                            y: {
+                              stacked: !selectedBrand,
+                            },
+                          },
+                        }}
+                      />
+                    );
                   }
-                }}
-              />
-                ) : (
-                  <Line
-                    data={{
-                      labels: chartData.salesByYearVolume.labels,
-                      datasets: [
-                        {
-                          label: 'Brand 1',
-                          data: chartData.salesByYearVolume.sales_data?.map((value: number) => value * 0.3) || [],
-                          backgroundColor: 'rgba(168, 218, 220, 0.8)',
-                          borderColor: '#457B9D',
-                          borderWidth: 3,
-                          fill: false,
-                          tension: 0.4,
+                  // line
+                  const datasets = [
+                    {
+                      label: selectedBrand ? selectedBrand : 'Sales Value',
+                      data: chartData.salesByYearVolume.sales_data || [],
+                      backgroundColor: 'rgba(168, 218, 220, 0.5)',
+                      borderColor: '#457B9D',
+                      borderWidth: 3,
+                      fill: false,
+                      tension: 0.4,
+                    },
+                  ];
+                  return (
+                    <Line
+                      data={{
+                        labels: chartData.salesByYearVolume.labels,
+                        datasets,
+                      }}
+                      options={{
+                        ...getChartOptions('Sales Value by Year', 'sales-by-year-volume'),
+                        scales: {
+                          x: { beginAtZero: true },
+                          y: { beginAtZero: true },
                         },
-                        {
-                          label: 'Brand 2',
-                          data: chartData.salesByYearVolume.sales_data?.map((value: number) => value * 0.25) || [],
-                          backgroundColor: 'rgba(241, 167, 167, 0.8)',
-                          borderColor: '#E63946',
-                          borderWidth: 3,
-                          fill: false,
-                          tension: 0.4,
-                        },
-                        {
-                          label: 'Brand 3',
-                          data: chartData.salesByYearVolume.sales_data?.map((value: number) => value * 0.2) || [],
-                          backgroundColor: 'rgba(255, 209, 102, 0.8)',
-                          borderColor: '#F77F00',
-                          borderWidth: 3,
-                          fill: false,
-                          tension: 0.4,
-                        },
-                        {
-                          label: 'Brand 4',
-                          data: chartData.salesByYearVolume.sales_data?.map((value: number) => value * 0.15) || [],
-                          backgroundColor: 'rgba(232, 244, 248, 0.8)',
-                          borderColor: '#A8DADC',
-                          borderWidth: 3,
-                          fill: false,
-                          tension: 0.4,
-                        },
-                        {
-                          label: 'Brand 5',
-                          data: chartData.salesByYearVolume.sales_data?.map((value: number) => value * 0.07) || [],
-                          backgroundColor: 'rgba(248, 232, 232, 0.8)',
-                          borderColor: '#F1A7A7',
-                          borderWidth: 3,
-                          fill: false,
-                          tension: 0.4,
-                        },
-                        {
-                          label: 'Brand 6',
-                          data: chartData.salesByYearVolume.sales_data?.map((value: number) => value * 0.03) || [],
-                          backgroundColor: 'rgba(255, 244, 230, 0.8)',
-                          borderColor: '#FFD166',
-                          borderWidth: 3,
-                          fill: false,
-                          tension: 0.4,
-                        },
-                      ],
-                    }}
-                    options={{
-                      ...getChartOptions('Sales Value by Year - Brand Wise', 'sales-by-year-volume'),
-                      scales: {
-                        x: {
-                          beginAtZero: true,
-                        },
-                        y: {
-                          beginAtZero: true,
-                        },
-                      },
-                      plugins: {
-                        ...getChartOptions('Sales Value by Year - Brand Wise', 'sales-by-year-volume').plugins,
-                        legend: {
-                          ...getChartOptions('Sales Value by Year - Brand Wise', 'sales-by-year-volume').plugins?.legend,
-                          labels: {
-                            usePointStyle: true,
-                            padding: 15,
-                            font: {
-                              size: 11,
-                              weight: 'bold'
-                            }
-                          }
-                        }
-                      }
-                    }}
-                  />
-                )}
+                      }}
+                    />
+                  );
+                })()}
               </Box>
               ) : (
                 <Box display="flex" justifyContent="center" alignItems="center" height="100%">
@@ -720,93 +626,45 @@ const Dashboard: React.FC = () => {
             </Box>
               {chartData.yearlySalesValue ? (
               <Box id="yearly-sales-value-chart">
-                <Bar
-                  data={{
-                    labels: chartData.yearlySalesValue.labels,
-                    datasets: [
-                      {
-                      label: 'Brand 1',
-                        data: chartData.yearlySalesValue.data,
+                {(() => {
+                  const selectedBrand = (filters.brands && filters.brands.length === 1) ? filters.brands[0] : null;
+                  const datasets = selectedBrand ? [
+                    {
+                      label: selectedBrand,
+                      data: chartData.yearlySalesValue.data || [],
                       backgroundColor: '#A8DADC',
                       borderColor: '#457B9D',
                       borderWidth: 1,
                       borderRadius: 4,
                       borderSkipped: false,
                     },
+                  ] : [
                     {
-                      label: 'Brand 2',
-                      data: chartData.yearlySalesValue.data?.map(val => val * 0.8) || [],
-                      backgroundColor: '#F1A7A7',
-                      borderColor: '#E63946',
+                      label: 'Sales Value',
+                      data: chartData.yearlySalesValue.data || [],
+                      backgroundColor: '#A8DADC',
+                      borderColor: '#457B9D',
                       borderWidth: 1,
                       borderRadius: 4,
                       borderSkipped: false,
                     },
-                    {
-                      label: 'Brand 3',
-                      data: chartData.yearlySalesValue.data?.map(val => val * 0.6) || [],
-                      backgroundColor: '#FFD166',
-                      borderColor: '#F77F00',
-                      borderWidth: 1,
-                      borderRadius: 4,
-                      borderSkipped: false,
-                    },
-                    {
-                      label: 'Brand 4',
-                      data: chartData.yearlySalesValue.data?.map(val => val * 0.4) || [],
-                      backgroundColor: '#E8F4F8',
-                      borderColor: '#A8DADC',
-                      borderWidth: 1,
-                      borderRadius: 4,
-                      borderSkipped: false,
-                    },
-                    {
-                      label: 'Brand 5',
-                      data: chartData.yearlySalesValue.data?.map(val => val * 0.3) || [],
-                      backgroundColor: '#F8E8E8',
-                      borderColor: '#F1A7A7',
-                      borderWidth: 1,
-                      borderRadius: 4,
-                      borderSkipped: false,
-                    },
-                    {
-                      label: 'Brand 6',
-                      data: chartData.yearlySalesValue.data?.map(val => val * 0.2) || [],
-                      backgroundColor: '#FFF4E6',
-                      borderColor: '#FFD166',
-                        borderWidth: 1,
-                      borderRadius: 4,
-                      borderSkipped: false,
-                      },
-                    ],
-                  }}
-                options={{
-                  ...getChartOptions('Year-wise Sales Value - Brand Wise', 'yearly-sales-value'),
-                  scales: {
-                    x: {
-                      stacked: true,
-                    },
-                    y: {
-                      stacked: true,
-                      beginAtZero: true,
-                    },
-                  },
-                  plugins: {
-                    ...getChartOptions('Year-wise Sales Value - Brand Wise', 'yearly-sales-value').plugins,
-                    legend: {
-                      ...getChartOptions('Year-wise Sales Value - Brand Wise', 'yearly-sales-value').plugins?.legend,
-                      labels: {
-                        usePointStyle: true,
-                        padding: 15,
-                        font: {
-                          size: 11,
-                          weight: 'bold'
-                        }
-                      }
-                    }
-                  }
-                }}
-              />
+                  ];
+                  return (
+                    <Bar
+                      data={{
+                        labels: chartData.yearlySalesValue.labels,
+                        datasets,
+                      }}
+                      options={{
+                        ...getChartOptions('Year-wise Sales Value', 'yearly-sales-value'),
+                        scales: {
+                          x: { stacked: false },
+                          y: { stacked: false, beginAtZero: true },
+                        },
+                      }}
+                    />
+                  );
+                })()}
               </Box>
               ) : (
                 <Box display="flex" justifyContent="center" alignItems="center" height="100%">
@@ -1009,7 +867,7 @@ const Dashboard: React.FC = () => {
                 </IconButton>
               </Tooltip>
             </Box>
-            {(chartData.marketShare || true) ? (() => {
+            {chartData.marketShare ? (() => {
               // Define brand-to-color mapping
               const brandColorMap: { [key: string]: { bg: string; border: string } } = {
                 'Brand 1': { bg: '#A8DADC', border: '#457B9D' },
@@ -1021,13 +879,8 @@ const Dashboard: React.FC = () => {
               };
 
               // Create dummy data if no real data is available
-              const labels = (chartData.marketShare && chartData.marketShare.labels && chartData.marketShare.labels.length > 0) 
-                ? chartData.marketShare.labels 
-                : ['Brand 1', 'Brand 2', 'Brand 3', 'Brand 4', 'Brand 5', 'Brand 6'];
-              
-              const data = (chartData.marketShare && chartData.marketShare.data && chartData.marketShare.data.length > 0) 
-                ? chartData.marketShare.data 
-                : [30, 25, 20, 15, 7, 3]; // Dummy percentages
+              const labels = chartData.marketShare.labels;
+              const data = chartData.marketShare.data;
 
               // Sort data to ensure Brand 1, 2, 3, 4, 5, 6 order
               const sortedData = labels
