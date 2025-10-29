@@ -540,8 +540,11 @@ const Dashboard: React.FC = () => {
                 </IconButton>
               </Tooltip>
             </Box>
-            {/* Metric Toggle (clearly labeled) */}
-            <Box sx={{ position: 'absolute', top: 16, left: 16, zIndex: 1 }}>
+            {/* Metric Toggle (placed in header row) */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: 'text.secondary' }}>
+                Metric
+              </Typography>
               <ToggleButtonGroup
                 size="small"
                 color="primary"
