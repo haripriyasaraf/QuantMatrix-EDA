@@ -81,6 +81,7 @@ const Dashboard: React.FC = () => {
     monthlyTrend: 'line',
     marketShare: 'doughnut'
   });
+  const [marketShareMetric, setMarketShareMetric] = useState<'sales' | 'volume'>('sales');
   const [fullScreenChart, setFullScreenChart] = useState<string | null>(null);
 
   useEffect(() => {
@@ -119,7 +120,7 @@ const Dashboard: React.FC = () => {
         apiService.getSalesByYearVolume(filters),
         apiService.getYearlySalesValue(filters),
         apiService.getMonthlyTrend(filters),
-        apiService.getMarketShare(filters),
+        apiService.getMarketShare(filters, marketShareMetric),
       ]);
 
       setSummaryStats(summaryStatsData);
@@ -134,6 +135,16 @@ const Dashboard: React.FC = () => {
       console.error('Error loading dashboard data:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadMarketShareOnly = async (metric: 'sales' | 'volume') => {
+    try {
+      const marketShareData = await apiService.getMarketShare(filters, metric);
+      setChartData(prev => ({ ...prev, marketShare: marketShareData }));
+    } catch (err) {
+      console.error('Error loading market share:', err);
+      setError('Failed to load market share');
     }
   };
 
@@ -524,6 +535,41 @@ const Dashboard: React.FC = () => {
                   }}
                 >
                   <Fullscreen fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </Box>
+            {/* Metric Toggle */}
+            <Box sx={{ position: 'absolute', top: 16, left: 16, display: 'flex', gap: 1, zIndex: 1 }}>
+              <Tooltip title="Show Market Share by Sales">
+                <IconButton 
+                  size="small"
+                  onClick={() => { setMarketShareMetric('sales'); loadMarketShareOnly('sales'); }}
+                  sx={{ 
+                    backgroundColor: marketShareMetric === 'sales' ? '#f39c12' : (darkMode ? 'rgba(45, 45, 45, 0.9)' : 'rgba(255,255,255,0.9)'),
+                    color: marketShareMetric === 'sales' ? 'white' : (darkMode ? '#f39c12' : 'inherit'),
+                    '&:hover': { 
+                      backgroundColor: marketShareMetric === 'sales' ? '#e67e22' : (darkMode ? 'rgba(45, 45, 45, 1)' : 'rgba(255,255,255,1)'),
+                      color: marketShareMetric === 'sales' ? 'white' : (darkMode ? '#e67e22' : 'inherit')
+                    }
+                  }}
+                >
+                  <PieChart fontSize="small" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Show Market Share by Volume">
+                <IconButton 
+                  size="small"
+                  onClick={() => { setMarketShareMetric('volume'); loadMarketShareOnly('volume'); }}
+                  sx={{ 
+                    backgroundColor: marketShareMetric === 'volume' ? '#f39c12' : (darkMode ? 'rgba(45, 45, 45, 0.9)' : 'rgba(255,255,255,0.9)'),
+                    color: marketShareMetric === 'volume' ? 'white' : (darkMode ? '#f39c12' : 'inherit'),
+                    '&:hover': { 
+                      backgroundColor: marketShareMetric === 'volume' ? '#e67e22' : (darkMode ? 'rgba(45, 45, 45, 1)' : 'rgba(255,255,255,1)'),
+                      color: marketShareMetric === 'volume' ? 'white' : (darkMode ? '#e67e22' : 'inherit')
+                    }
+                  }}
+                >
+                  <Timeline fontSize="small" />
                 </IconButton>
               </Tooltip>
             </Box>
@@ -1139,7 +1185,7 @@ const Dashboard: React.FC = () => {
                         },
                       ],
                     }}
-                    options={getDoughnutOptions('Market Share by Sales')}
+                    options={getDoughnutOptions(marketShareMetric === 'sales' ? 'Market Share by Sales' : 'Market Share by Volume')}
                   />
                 </Box>
               );
