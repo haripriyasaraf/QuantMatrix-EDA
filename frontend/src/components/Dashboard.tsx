@@ -210,6 +210,29 @@ const Dashboard: React.FC = () => {
             const value = typeof parsed === 'number' ? parsed : 0;
             return `${datasetLabel}${value.toLocaleString()}`;
           },
+          afterBody: (items: any[]) => {
+            if (!items || items.length === 0) return [] as string[];
+            const i = items[0].dataIndex ?? 0;
+            const lines: string[] = [];
+            try {
+              if (chartType === 'sales-by-year-volume' && chartData.salesByYearVolume) {
+                const s = Number(chartData.salesByYearVolume.sales_data?.[i] ?? 0);
+                const v = Number(chartData.salesByYearVolume.volume_data?.[i] ?? 0);
+                const t = s + v;
+                lines.push(`Sales: ${s.toLocaleString()}`);
+                lines.push(`Volume: ${v.toLocaleString()}`);
+                lines.push(`Total: ${t.toLocaleString()}`);
+              } else if (chartType === 'yearly-sales-value' && chartData.yearlySalesValue) {
+                const s = Number(chartData.yearlySalesValue.data?.[i] ?? 0);
+                lines.push(`Sales: ${s.toLocaleString()}`);
+                lines.push(`Total: ${s.toLocaleString()}`);
+              } else if (chartType === 'monthly-trend' && chartData.monthlyTrend) {
+                const s = Number(chartData.monthlyTrend.data?.[i] ?? 0);
+                lines.push(`Sales: ${s.toLocaleString()}`);
+              }
+            } catch {}
+            return lines;
+          },
           footer: function(items: any[]) {
             if (!items || items.length === 0) return '';
             const dataIndex = items[0].dataIndex;
@@ -267,6 +290,12 @@ const Dashboard: React.FC = () => {
             const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
             const percentage = total ? ((value / total) * 100).toFixed(1) : '0.0';
             return `${label}: ${Number(value).toLocaleString()} (${percentage}%)`;
+          },
+          afterBody: function(contexts: any[]) {
+            if (!contexts || contexts.length === 0) return [] as string[];
+            const dataset = contexts[0].dataset;
+            const total = (dataset?.data || []).reduce((a: number, b: number) => a + b, 0);
+            return [`Total: ${Number(total).toLocaleString()}`];
           },
           footer: function(contexts: any[]) {
             if (!contexts || contexts.length === 0) return '';
